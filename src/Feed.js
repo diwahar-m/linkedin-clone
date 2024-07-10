@@ -7,16 +7,16 @@ import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import ArticleIcon from '@mui/icons-material/Article';
 import Post from "./Post";
-import { db } from './firebase.js';
-import firebase from 'firebase';
-
+import { db } from './firebase';
+import {serverTimestamp, collection, onSnapshot, addDoc } from 'firebase/firestore';
 const Feed = () => {
   const [input, setInput] = useState("");
   const [posts, setPosts] = useState([]);
 
   useEffect(()=>{
     // gives real time collection of database.
-    db.collection("posts").onSnapshot(snapshot => (
+    const postsCollection  = collection(db, "posts");
+    const unsubscribe = onSnapshot(postsCollection, snapshot => (
       setPosts(snapshot.docs.map(doc => 
         ({
           id: doc.id,
@@ -24,18 +24,24 @@ const Feed = () => {
         })
       ))
     ))
+    return () => unsubscribe();
   },[])
 
-  const sendPost = e =>{
+  const sendPost = async (e) =>{
     e.preventDefault();
-    db.collection('posts').add({
-      name:'Modi',
-      description: 'This is a test.',
-      message: input,
-      photoUrl: '',
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    })
-    setInput("");
+    try {
+      const postsCollection = collection(db, 'posts');
+      await addDoc(postsCollection, {
+        name: 'Modi',
+        description: 'This is a test.',
+        message: input,
+        photoUrl: '',
+        timestamp: serverTimestamp(),
+      });
+      setInput("");
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
   }
 
   return (
