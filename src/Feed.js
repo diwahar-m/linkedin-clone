@@ -8,7 +8,7 @@ import EventNoteIcon from '@mui/icons-material/EventNote';
 import ArticleIcon from '@mui/icons-material/Article';
 import Post from "./Post";
 import { db } from './firebase';
-import {serverTimestamp, collection, onSnapshot, addDoc } from 'firebase/firestore';
+import {serverTimestamp, collection, onSnapshot, addDoc, query,orderBy } from 'firebase/firestore';
 const Feed = () => {
   const [input, setInput] = useState("");
   const [posts, setPosts] = useState([]);
@@ -16,7 +16,8 @@ const Feed = () => {
   useEffect(()=>{
     // gives real time collection of database.
     const postsCollection  = collection(db, "posts");
-    const unsubscribe = onSnapshot(postsCollection, snapshot => (
+    const postsQuery = query(postsCollection, orderBy("timestamp", "desc"))
+    const unsubscribe = onSnapshot(postsQuery, snapshot => (
       setPosts(snapshot.docs.map(doc => 
         ({
           id: doc.id,
