@@ -9,9 +9,14 @@ import ArticleIcon from '@mui/icons-material/Article';
 import Post from "./Post";
 import { db } from './firebase';
 import {serverTimestamp, collection, onSnapshot, addDoc, query,orderBy } from 'firebase/firestore';
+import { useSelector } from 'react-redux';
+import { selectUser } from './features/userSlice.js';
+import FlipMove from 'react-flip-move';
+
 const Feed = () => {
   const [input, setInput] = useState("");
   const [posts, setPosts] = useState([]);
+  const user = useSelector(selectUser)
 
   useEffect(()=>{
     // gives real time collection of database.
@@ -33,10 +38,10 @@ const Feed = () => {
     try {
       const postsCollection = collection(db, 'posts');
       await addDoc(postsCollection, {
-        name: 'Modi',
-        description: 'This is a test.',
+        name: user?.displayName,
+        description: user?.email,
         message: input,
-        photoUrl: '',
+        photoUrl: user?.photoUrl || '',
         timestamp: serverTimestamp(),
       });
       setInput("");
@@ -76,15 +81,18 @@ const Feed = () => {
       </div>
 
       {/* Posts */}
-      {posts.map(({id, data: { name, description, message, photoUrl}})=>
-        <Post 
-        key={id}
-        name= {name}
-        description= {description}
-        message= {message}
-        photoUrl= {photoUrl} 
-      />
-      )}
+      <FlipMove>
+            {posts.map(({id, data: { name, description, message, photoUrl}})=>
+              <Post 
+                key={id}
+                name= {name}
+                description= {description}
+                message= {message}
+                photoUrl= {photoUrl} 
+              />
+          )}
+      </FlipMove>
+      
       {/* <Post 
         name="modi" 
         description="This is a test" 
