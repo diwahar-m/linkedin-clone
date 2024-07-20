@@ -5,6 +5,10 @@ export const store = configureStore({
   reducer: {
     user: userReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,  // Disable the serializable check middleware
+    }),
 });
 // ----- REDUX ------------
 // diff slices has diff info in redux. Ex: userSlice, themeSlice.

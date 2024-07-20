@@ -16,7 +16,7 @@
     font-weight: 400;
 }
 .headerOption__icon {
-    object-fit: contain;
+    object-fit: cover;
     height:25px !important;
     width: 25px !important;
 }

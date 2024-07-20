@@ -8,9 +8,23 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import WorkIcon from '@mui/icons-material/Work';
 import MessageIcon from '@mui/icons-material/Message';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+// import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useDispatch } from 'react-redux';
+import {auth} from "./firebase"
+import {logout} from "./features/userSlice"
+
 
 const Header = () => {
+  
+  const dispatch = useDispatch();
+
+  const logoutOfApp = ()=>{
+    dispatch(logout())
+    auth.signOut()
+  }
+  
+
+
   return (
     <div className="header">
       <div className='header__left'>
@@ -26,7 +40,7 @@ const Header = () => {
         <HeaderOption Icon={WorkIcon} title="Jobs" />
         <HeaderOption Icon={MessageIcon}  title="Messaging" />
         <HeaderOption Icon={NotificationsIcon} title="Notification" />
-        <HeaderOption Avatar={AccountCircleIcon} title="profile" />
+        <HeaderOption avatar={true} onClick={logoutOfApp}  title="profile" />
       </div>
     </div>
   )
