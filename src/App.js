@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { onAuthStateChanged } from 'firebase/auth';
 import {login, logout} from "./features/userSlice"
 import { auth} from "./firebase"
+import Widgets from './Widgets';
 
 function App() {
 
@@ -50,6 +51,7 @@ function App() {
          <div className='app__body'>
          <Sidebar />
          <Feed />
+         <Widgets />
        </div>
     
   )}
